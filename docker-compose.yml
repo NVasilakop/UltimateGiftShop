@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  ultimategiftshop:
+    image: ${DOCKER_REGISTRY-}ultimategiftshop
+    build:
+      context: .
+      dockerfile: UltimateGiftShop/Dockerfile
+
+  rabbitmq: # login guest:guest
+    image: rabbitmq:3-management
+    hostname: "rabbitmq"
+    labels:
+      NAME: "rabbitmq"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  redis-master: # Setting up master node
+    image: 'bitnami/redis:latest'
+    hostname: redis-master
+    ports:
+      - 6379:6379
+#    networks:
+#      - network
+    environment:
+#      - REDIS_REPLICATION_MODE=master
+      - ALLOW_EMPTY_PASSWORD=yes
+#      - REDIS_CLUSTER_CREATOR=yes
