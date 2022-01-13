@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using StackExchange.Redis;
 using UltimateGiftShop.Services;
 using UltimateGiftShop.Services.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using UltimateGiftShop.Repositories;
 
 namespace UltimateGiftShop
 {
@@ -48,6 +50,9 @@ namespace UltimateGiftShop
 
                     return connection;
                 });
+
+            services.AddDbContext<UltimateGiftShopDbContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("UltimateGiftShop"), b => b.MigrationsAssembly("UltimateGiftShop.Repositories")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
