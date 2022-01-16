@@ -8,8 +8,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
-using UltimateGiftShop.Models;
 using UltimateGiftShop.Services.Abstractions;
+using AppDataModels.Models;
 
 namespace UltimateGiftShop.Controllers
 {
@@ -26,9 +26,9 @@ namespace UltimateGiftShop.Controllers
 
         //public ActionResult gE
         [HttpGet]
-        public string Get(int userId)
+        public string Get(string userId)
         {
-            return GenerateJSONWebToken(new LoginUser { UserId=userId});
+            return GenerateJSONWebToken(new LoginUser { UserName=userId});
         }
         
         private string GenerateJSONWebToken(LoginUser loginUser)
@@ -38,13 +38,13 @@ namespace UltimateGiftShop.Controllers
 
             var claims = new[]
             {
-                new Claim("Issuer",loginUser.UserId.ToString()),
+                new Claim("Issuer",loginUser.UserName),
                 new Claim("Admin",""),
-                new Claim(JwtRegisteredClaimNames.UniqueName,loginUser.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName,loginUser.UserName),
 
             };
-            var token = new JwtSecurityToken(loginUser.UserId.ToString(),
-                loginUser.UserId.ToString(),
+            var token = new JwtSecurityToken(loginUser.UserName,
+                loginUser.UserName,
                 claims,
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);

@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UltimateGiftShop.Services.DataModels\UltimateGiftShop.Services.DataModels.csproj" />
+    <ProjectReference Include="..\AppDataModels\AppDataModels.csproj" />
   </ItemGroup>
 
 </Project>

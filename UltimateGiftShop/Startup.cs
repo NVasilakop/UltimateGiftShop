@@ -13,6 +13,7 @@ using UltimateGiftShop.Services;
 using UltimateGiftShop.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using UltimateGiftShop.Repositories;
+using AutoMapper;
 
 namespace UltimateGiftShop
 {
@@ -51,9 +52,22 @@ namespace UltimateGiftShop
                     return connection;
                 });
 
+            #region Repositories
+            services.AddSingleton<UltimateGiftShop.Repositories.Abstractions.IUserService,UltimateGiftShop.Repositories.Services.UserService>();
+            #endregion
+
+            #region Services
+            services.AddSingleton<UltimateGiftShop.Services.Abstractions.IUserService, UltimateGiftShop.Services.UserService>();
+            #endregion
+
             services.AddDbContext<UltimateGiftShopDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("UltimateGiftShop"), b => b.MigrationsAssembly("UltimateGiftShop.Repositories")));
-        }
+            var configuration = new MapperConfiguration(cfg =>
+            cfg.AddMaps(new[] {
+                        "UltimateGiftShop.Services.DataModels",
+                        "UltimateGiftShop.Repositories.DataModels"
+                            }));
+                }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

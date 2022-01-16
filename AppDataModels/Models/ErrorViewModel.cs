@@ -1,6 +1,6 @@
 using System;
 
-namespace UltimateGiftShop.Models
+namespace AppDataModels.Models
 {
     public class ErrorViewModel
     {

@@ -4,4 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UltimateGiftShop.Repositories.DataModels\UltimateGiftShop.Repositories.DataModels.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -9,10 +9,13 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
+      <ProjectReference Include="..\UltimateGiftShop.Repositories.Abstractions\UltimateGiftShop.Repositories.Abstractions.csproj" />
+      <ProjectReference Include="..\UltimateGiftShop.Repositories\UltimateGiftShop.Repositories.csproj" />
       <ProjectReference Include="..\UltimateGiftShop.Services.Abstractions\UltimateGiftShop.Services.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="11.0.0" />
       <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
     </ItemGroup>
 

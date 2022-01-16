@@ -23,7 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AppDataModels\AppDataModels.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\UltimateGiftShop.Repositories.Abstractions\UltimateGiftShop.Repositories.Abstractions.csproj" />
+    <ProjectReference Include="..\UltimateGiftShop.Repositories.Services\UltimateGiftShop.Repositories.Services.csproj" />
     <ProjectReference Include="..\UltimateGiftShop.Repositories\UltimateGiftShop.Repositories.csproj" />
     <ProjectReference Include="..\UltimateGiftShop.Services.Abstractions\UltimateGiftShop.Services.Abstractions.csproj" />
     <ProjectReference Include="..\UltimateGiftShop.Services\UltimateGiftShop.Services.csproj" />

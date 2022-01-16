@@ -10,14 +10,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Microsoft.IdentityModel.Tokens;
-using UltimateGiftShop.Models;
 using UltimateGiftShop.Services.Abstractions;
+using AppDataModels.Models;
 
 namespace UltimateGiftShop.Controllers
 {
     public class LoginController : Controller
     {
         private readonly IRedisRepositoryService _redisService;
+        private readonly IUserService _userService;
 
         public LoginController(IRedisRepositoryService serv)
         {
@@ -35,19 +36,27 @@ namespace UltimateGiftShop.Controllers
         public IActionResult Login(LoginUser loginUser)
         {
             IActionResult response = Unauthorized();
-            var user = _redisService.CheckIfUserExists(loginUser.UserId);
+            var user = new User();
             
-            if (user)
-            {
-                loginUser.LoggedIn = user;
-                //var tokenString = GenerateJSONWebToken(loginUser);
-                response = Ok(new { token = "" });
-            }
+            //if (user)
+            //{
+            //    loginUser.LoggedIn = user;
+            //    //var tokenString = GenerateJSONWebToken(loginUser);
+            //    response = Ok(new { token = "" });
+            //}
            
             return  RedirectToAction("Index",response);
         }
-        
-    
+
+        [HttpPost("Subscribe")]
+        public IActionResult Subscribe(SubscribeUser subUser)
+        {
+
+            var  result = _userService.CreateUser(subUser);
+
+            return View();
+        }
+
 
 
     }
