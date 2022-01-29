@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Security.AccessControl;
 using System.Security.Claims;
 using System.Text;
@@ -17,12 +19,17 @@ namespace UltimateGiftShop.Controllers
 {
     public class LoginController : Controller
     {
-        private readonly IRedisRepositoryService _redisService;
         private readonly IUserService _userService;
+        private readonly IHttpClientFactory _httpFactory;
+        private readonly ApiConfiguration _config;
 
-        public LoginController(IRedisRepositoryService serv)
+        //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        public LoginController(IUserService userService, IHttpClientFactory factory,ApiConfiguration conf)
         {
-            _redisService = serv;
+            _userService = userService;
+            _httpFactory = factory;
+            _config = conf;
         }
 
         public ActionResult Index()
@@ -30,34 +37,56 @@ namespace UltimateGiftShop.Controllers
             //return response;
             return View();
         }
-        
-        // GET: LoginController/Login
+
+        //GET: LoginController/Login
         [HttpPost]
-        public IActionResult Login(LoginUser loginUser)
+        public async Task<IActionResult> Login(LoginUser loginUser)
         {
-            IActionResult response = Unauthorized();
-            var user = new User();
-            
-            //if (user)
-            //{
-            //    loginUser.LoggedIn = user;
-            //    //var tokenString = GenerateJSONWebToken(loginUser);
-            //    response = Ok(new { token = "" });
-            //}
-           
-            return  RedirectToAction("Index",response);
+            var serviceResult = _userService.LoginUser(loginUser);
+            HttpClient client = _httpFactory.CreateClient(nameof(Login));
+            var response = await client.GetAsync(
+                $"{_config.BaseAddress}/api/security/gettoken?userId={"serviceResult.Data.UserName"}");
+            var context = HttpContext;
+            var token = await response.Content.ReadAsStringAsync();
+            if (serviceResult.Exists && serviceResult.Data.LoggedIn.Value)
+            {
+                //return RedirectToAction("Subscribe");
+                //HttpClient client = _httpFactory.CreateClient(nameof(Login));
+                //var response = await client.GetAsync($"/api/security/gettoken?userId={serviceResult.Data.UserName}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    return View("~/Views/Error/Index.cshtml");
+                }
+            }
+            if(!serviceResult.Exists)
+            {
+                return View("~/Views/Login/Subscribe.cshtml");
+            }
+            return View("~/Views/Home/Index.cshtml");
         }
 
         [HttpPost("Subscribe")]
-        public IActionResult Subscribe(SubscribeUser subUser)
+        public async Task<IActionResult> Subscribe(SubscribeUser subUser)
         {
-
             var  result = _userService.CreateUser(subUser);
 
+            if (result.Data && !result.Exists)
+            {
+                HttpClient client = _httpFactory.CreateClient(nameof(Login));
+                var response = await client.GetAsync(
+                    $"{_config.BaseAddress}/api/security/gettoken?userId={subUser.UserName}");
+            }
+            if (result.Exists)
+            {
+                return View("~/Views/Login/Login.cshtml");
+            }
+
+            if (result.HasError)
+            {
+                return View("~/Views/Error/Index.cshtml");
+            }
             return View();
         }
-
-
 
     }
 }

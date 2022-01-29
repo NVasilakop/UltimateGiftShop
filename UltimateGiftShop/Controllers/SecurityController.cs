@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
-using UltimateGiftShop.Services.Abstractions;
 using AppDataModels.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace UltimateGiftShop.Controllers
 {
@@ -17,29 +14,29 @@ namespace UltimateGiftShop.Controllers
     [ApiController]
     public class SecurityController : ControllerBase
     {
-        private readonly IRedisRepositoryService _redisService;
-
-        public SecurityController(IRedisRepositoryService serv)
+        private readonly IConfiguration _config;
+        public SecurityController(IConfiguration config)
         {
-            _redisService = serv;
+            _config = config;
         }
 
-        //public ActionResult gE
-        [HttpGet]
-        public string Get(string userId)
+        [HttpGet("gettoken")]
+        public ActionResult<string> Get(string userId)
         {
-            return GenerateJSONWebToken(new LoginUser { UserName=userId});
+            var token =  GenerateJSONWebToken(new LoginUser { UserName=userId});
+            return Ok(token);
         }
         
         private string GenerateJSONWebToken(LoginUser loginUser)
         {
-            var securityKey = new  SymmetricSecurityKey(Encoding.UTF8.GetBytes("Das_ist_my_secret_key"));
+            var x = _config.GetSection("KeyJwt").Value;
+            var securityKey = new  SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("KeyJwt").Value));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-                new Claim("Issuer",loginUser.UserName),
-                new Claim("Admin",""),
+                new Claim("Issuer","nikos"),
+                new Claim("Admin","true"),
                 new Claim(JwtRegisteredClaimNames.UniqueName,loginUser.UserName),
 
             };

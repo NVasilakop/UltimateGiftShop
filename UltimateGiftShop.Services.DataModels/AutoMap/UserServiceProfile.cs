@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,23 +13,40 @@ namespace UltimateGiftShop.Services.DataModels.AutoMap
 {
     public class UserServiceProfile : Profile
     {
+        private Guid Salt { get; set; } = Guid.NewGuid();
         public UserServiceProfile()
         {
-                CreateMap<SubscribeUser, User>(MemberList.Destination)
-                    .ForMember(us => us.Password,
-                     opt => opt.MapFrom(src => EncryptKey(src.Password,src.UserName)));
-                // Use CreateMap... Etc.. here (Profile methods are the same as configuration methods)
-         
-        }
+            CreateMap<SubscribeUser, UltimateGiftShop.Repositories.DataModels.User>(MemberList.Destination)
+                .ForMember(us => us.UserKey,
+                    opt =>
+                        opt.MapFrom(src => EncryptKey(src.Password, src.UserName , Salt)))
+                .ForMember(us => us.CreationDate, opt 
+                    => opt.MapFrom( o => DateTime.Now))
+                .ForMember(us => us.LastLoginDate, opt
+                    => opt.MapFrom(o => DateTime.Now))
+                .ForMember(us => us.LastUpdateDate, opt
+                    => opt.MapFrom(o => DateTime.Now))
+                .ForMember(us => us.Salt, opt
+                    => opt.MapFrom(o => Salt))
+                .ForMember(us => us.UserKey,
+                    opt =>
+                        opt.MapFrom(src => EncryptKey(src.Password, src.UserName, Salt)));
 
-        private string EncryptKey(string pass,string username)
+            CreateMap<UltimateGiftShop.Repositories.DataModels.User, LoginUser>()
+                .ForMember(us => us.LoggedIn ,
+                    opt =>
+                        opt.MapFrom(src => src.UserId != 0))
+                .ForMember(us => us.UserName, opt
+                    => opt.MapFrom(o => o.UserId));
+
+        }
+        private string EncryptKey(string pass, string username, Guid salt)
         {
-            Guid salt = Guid.NewGuid();
-            string EncryptionKey = pass+ username + $".{salt}";
+            string EncryptionKey = username ;
             byte[] clearBytes = Encoding.Unicode.GetBytes(pass);
             using (Aes encryptor = Aes.Create())
             {
-                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, salt.ToByteArray());
                 encryptor.Key = pdb.GetBytes(32);
                 encryptor.IV = pdb.GetBytes(16);
                 using (MemoryStream ms = new MemoryStream())
@@ -43,7 +61,5 @@ namespace UltimateGiftShop.Services.DataModels.AutoMap
             }
             return pass;
         }
-
-
     }
 }

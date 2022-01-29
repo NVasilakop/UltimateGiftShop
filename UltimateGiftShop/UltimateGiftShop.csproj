@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.13">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +22,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
   </ItemGroup>
 
@@ -29,11 +33,8 @@
     <ProjectReference Include="..\UltimateGiftShop.Repositories.Services\UltimateGiftShop.Repositories.Services.csproj" />
     <ProjectReference Include="..\UltimateGiftShop.Repositories\UltimateGiftShop.Repositories.csproj" />
     <ProjectReference Include="..\UltimateGiftShop.Services.Abstractions\UltimateGiftShop.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\UltimateGiftShop.Services.DataModels\UltimateGiftShop.Services.DataModels.csproj" />
     <ProjectReference Include="..\UltimateGiftShop.Services\UltimateGiftShop.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Views\Login\Login.cshtml" />
   </ItemGroup>
 
 </Project>

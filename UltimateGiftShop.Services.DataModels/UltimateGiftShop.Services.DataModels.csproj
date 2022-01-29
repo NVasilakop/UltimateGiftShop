@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppDataModels\AppDataModels.csproj" />
+    <ProjectReference Include="..\UltimateGiftShop.Repositories.DataModels\UltimateGiftShop.Repositories.DataModels.csproj" />
   </ItemGroup>
 
 </Project>

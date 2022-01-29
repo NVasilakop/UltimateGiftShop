@@ -13,15 +13,16 @@ namespace UltimateGiftShop.Repositories
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Order>().HasMany<OrderItem>(s => s.OrderItems).WithOne(r => r.Order).HasForeignKey(s => s.OrderId);
-            modelBuilder.Entity<Order>().HasOne<User>(s => s.User).WithOne().HasForeignKey<User>(r=>r.UserId);
+            //Database.SetInitializer<DataContext>(null);
+            //modelBuilder.Entity<Order>().HasMany<OrderItem>(s => s.OrderItems).WithOne(r => r.Order).HasForeignKey(s => s.OrderId);
+            //modelBuilder.Entity<Order>().HasOne<User>(s => s.User).WithOne().HasForeignKey<User>(r=>r.UserId);
 
-            modelBuilder.Entity<OrderItem>().HasOne<CategoryDiscount>(s => s.CategoryDiscount).WithOne().HasForeignKey<CategoryDiscount>(s => s.CategoryDiscountId);
-            modelBuilder.Entity<OrderItem>().HasOne<Item>(s => s.Item).WithOne().HasForeignKey<Item>(s => s.ItemId);
+            //modelBuilder.Entity<OrderItem>().HasOne<CategoryDiscount>(s => s.CategoryDiscount).WithOne().HasForeignKey<CategoryDiscount>(s => s.CategoryDiscountId);
+            //modelBuilder.Entity<OrderItem>().HasOne<Item>(s => s.Item).WithOne().HasForeignKey<Item>(s => s.ItemId);
 
-            modelBuilder.Entity<Item>().HasOne<Category>(s => s.Category).WithOne().HasForeignKey<Category>(s => s.CategoryId);
+            //modelBuilder.Entity<Item>().HasOne<Category>(s => s.Category).WithOne().HasForeignKey<Category>(s => s.CategoryId);
 
-            modelBuilder.Entity<CategoryDiscount>().HasOne<Category>(s => s.Category).WithOne().HasForeignKey<Category>(s => s.CategoryId);
+            //modelBuilder.Entity<CategoryDiscount>().HasOne<Category>(s => s.Category).WithOne().HasForeignKey<Category>(s => s.CategoryId);
 
         }
 

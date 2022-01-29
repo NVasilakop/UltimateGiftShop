@@ -9,7 +9,7 @@ namespace UltimateGiftShop.Repositories.Abstractions
 {
     public interface IUserService
     {
-        bool Create(User user);
-        User Get(string key);
+        RepoResult<bool> Create(User user);
+        RepoResult<User> Get(string key, string password);
     }
 }

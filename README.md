@@ -7,3 +7,6 @@ Fluent Api, Entity , Automapper are being used
 
 This is the main README file
 Install Docker Desktop and run with docker-compose up -d the images
+
+In localhost:5050 where pgadmin is create a new server with the username password that are in the docker-compose.yaml
+

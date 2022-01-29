@@ -9,6 +9,7 @@ namespace UltimateGiftShop.Services.Abstractions
 {
     public interface IUserService
     {
-        bool CreateUser(SubscribeUser user);
+        ServiceResult<bool> CreateUser(SubscribeUser user);
+        ServiceResult<LoginUser> LoginUser(LoginUser user);
     }
 }

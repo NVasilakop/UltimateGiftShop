@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UltimateGiftShop.Repositories;
@@ -9,9 +10,10 @@ using UltimateGiftShop.Repositories;
 namespace UltimateGiftShop.Repositories.Migrations
 {
     [DbContext(typeof(UltimateGiftShopDbContext))]
-    partial class UltimateGiftShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220120220731_RevertFluentApi")]
+    partial class RevertFluentApi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,19 +160,10 @@ namespace UltimateGiftShop.Repositories.Migrations
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("LastUpdateDate")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<int>("LoginAttempts")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("Salt")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("UserKey")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Username")
                         .HasColumnType("text");
 
                     b.HasKey("UserId");

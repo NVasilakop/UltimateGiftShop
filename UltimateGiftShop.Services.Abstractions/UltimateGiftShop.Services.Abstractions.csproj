@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\AppDataModels\AppDataModels.csproj" />
+      <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
 </Project>

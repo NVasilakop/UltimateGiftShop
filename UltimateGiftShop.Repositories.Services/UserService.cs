@@ -13,20 +13,31 @@ namespace UltimateGiftShop.Repositories.Services
             _shopDbContext = shopDbContext;
         }
 
-        public bool Create(User user)
+        public RepoResult<bool> Create(User user)
         {
-           var added =_shopDbContext.Users.Add(user);
-           _shopDbContext.SaveChanges();
-           return added.State == EntityState.Added;
-        
+            //user.UserId = 1;
+            var returnedUser = _shopDbContext.Users.FirstOrDefault(x => x.Username == user.Username);
+            if (returnedUser != null)
+            {
+                return new RepoResult<bool>(false, true);
+            }
+
+            var added = _shopDbContext.Users.Add(user);
+            _shopDbContext.SaveChanges();
+            return new RepoResult<bool>(added.State == EntityState.Added);
         }
 
-        public User Get(string key)
-        {
-            var user = _shopDbContext.Users.Where(x => x.UserKey == key).FirstOrDefault();
-            _shopDbContext.SaveChanges();
-            return user;
 
+        public RepoResult<User> Get(string username, string password)
+        {
+            var user = _shopDbContext.Users.FirstOrDefault(x => x.Username == username);
+            bool exists = false;
+            if (user != null)
+            {
+                exists = Common.DecryptKey(user.UserKey, user) == password;
+            }
+
+            return new RepoResult<User>(user, exists);
         }
     }
 }

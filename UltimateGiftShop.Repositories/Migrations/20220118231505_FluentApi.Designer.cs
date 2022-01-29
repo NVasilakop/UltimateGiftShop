@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UltimateGiftShop.Repositories;
@@ -9,9 +10,10 @@ using UltimateGiftShop.Repositories;
 namespace UltimateGiftShop.Repositories.Migrations
 {
     [DbContext(typeof(UltimateGiftShopDbContext))]
-    partial class UltimateGiftShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220118231505_FluentApi")]
+    partial class FluentApi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,8 +25,7 @@ namespace UltimateGiftShop.Repositories.Migrations
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -41,8 +42,7 @@ namespace UltimateGiftShop.Repositories.Migrations
                 {
                     b.Property<int>("CategoryDiscountId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
 
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
@@ -55,8 +55,6 @@ namespace UltimateGiftShop.Repositories.Migrations
 
                     b.HasKey("CategoryDiscountId");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("CategoryDiscounts");
                 });
 
@@ -64,8 +62,7 @@ namespace UltimateGiftShop.Repositories.Migrations
                 {
                     b.Property<int>("ItemId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
@@ -80,8 +77,6 @@ namespace UltimateGiftShop.Repositories.Migrations
                         .HasColumnType("double precision");
 
                     b.HasKey("ItemId");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("Items");
                 });
@@ -103,8 +98,6 @@ namespace UltimateGiftShop.Repositories.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("OrderId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -130,10 +123,6 @@ namespace UltimateGiftShop.Repositories.Migrations
 
                     b.HasKey("OrderItemId");
 
-                    b.HasIndex("CategoryDiscountId");
-
-                    b.HasIndex("ItemId");
-
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
@@ -143,8 +132,7 @@ namespace UltimateGiftShop.Repositories.Migrations
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
 
                     b.Property<string>("Alias")
                         .HasColumnType("text");
@@ -158,19 +146,10 @@ namespace UltimateGiftShop.Repositories.Migrations
                     b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("LastUpdateDate")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<int>("LoginAttempts")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("Salt")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("UserKey")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Username")
                         .HasColumnType("text");
 
                     b.HasKey("UserId");
@@ -178,69 +157,81 @@ namespace UltimateGiftShop.Repositories.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.CategoryDiscount", b =>
+            modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.Category", b =>
                 {
-                    b.HasOne("UltimateGiftShop.Repositories.DataModels.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("UltimateGiftShop.Repositories.DataModels.CategoryDiscount", null)
+                        .WithOne("Category")
+                        .HasForeignKey("UltimateGiftShop.Repositories.DataModels.Category", "CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.HasOne("UltimateGiftShop.Repositories.DataModels.Item", null)
+                        .WithOne("Category")
+                        .HasForeignKey("UltimateGiftShop.Repositories.DataModels.Category", "CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.CategoryDiscount", b =>
+                {
+                    b.HasOne("UltimateGiftShop.Repositories.DataModels.OrderItem", null)
+                        .WithOne("CategoryDiscount")
+                        .HasForeignKey("UltimateGiftShop.Repositories.DataModels.CategoryDiscount", "CategoryDiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.Item", b =>
                 {
-                    b.HasOne("UltimateGiftShop.Repositories.DataModels.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("UltimateGiftShop.Repositories.DataModels.OrderItem", null)
+                        .WithOne("Item")
+                        .HasForeignKey("UltimateGiftShop.Repositories.DataModels.Item", "ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.Order", b =>
-                {
-                    b.HasOne("UltimateGiftShop.Repositories.DataModels.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.OrderItem", b =>
                 {
-                    b.HasOne("UltimateGiftShop.Repositories.DataModels.CategoryDiscount", "CategoryDiscount")
-                        .WithMany()
-                        .HasForeignKey("CategoryDiscountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UltimateGiftShop.Repositories.DataModels.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("UltimateGiftShop.Repositories.DataModels.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CategoryDiscount");
-
-                    b.Navigation("Item");
-
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.User", b =>
+                {
+                    b.HasOne("UltimateGiftShop.Repositories.DataModels.Order", null)
+                        .WithOne("User")
+                        .HasForeignKey("UltimateGiftShop.Repositories.DataModels.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.CategoryDiscount", b =>
+                {
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.Item", b =>
+                {
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.Order", b =>
                 {
                     b.Navigation("OrderItems");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("UltimateGiftShop.Repositories.DataModels.OrderItem", b =>
+                {
+                    b.Navigation("CategoryDiscount");
+
+                    b.Navigation("Item");
                 });
 #pragma warning restore 612, 618
         }

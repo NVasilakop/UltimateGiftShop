@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UltimateGiftShop.Repositories;
@@ -9,9 +10,10 @@ using UltimateGiftShop.Repositories;
 namespace UltimateGiftShop.Repositories.Migrations
 {
     [DbContext(typeof(UltimateGiftShopDbContext))]
-    partial class UltimateGiftShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220122204049_miniUpdates")]
+    partial class miniUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
